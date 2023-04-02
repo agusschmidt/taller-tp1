@@ -1,8 +1,12 @@
+mod ajedrez;
 mod archivo;
-mod tablero;
 
+pub mod color;
 mod pieza;
+pub mod tipo_pieza;
 use crate::pieza::Pieza;
+
+mod coordenada;
 
 mod formato;
 
@@ -21,7 +25,7 @@ fn main() {
 
     let txt_arg = &args[1];
     match archivo::leer_archivo(txt_arg) {
-        Ok(contenido) => match tablero::obtener_piezas(contenido) {
+        Ok(contenido) => match ajedrez::obtener_piezas(contenido) {
             Ok(piezas) => {
                 let piezas: Vec<Pieza> = piezas;
                 if piezas.len() != 2 {
@@ -30,7 +34,16 @@ fn main() {
                     );
                     exit(0);
                 }
-                Pieza::analizar_jugadas(piezas);
+                match Pieza::analizar_jugadas(piezas) {
+                    Ok(res) => {
+                        let resultado = ajedrez::definir_resultado(res);
+                        println!("{}", resultado);
+                    }
+                    Err(error) => {
+                        eprintln!("{}", error);
+                        exit(0);
+                    }
+                }
             }
             Err(error) => {
                 eprintln!("{}", error);
