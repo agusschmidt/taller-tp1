@@ -1,17 +1,7 @@
-mod ajedrez;
-mod archivo;
-
-pub mod color;
-mod pieza;
-pub mod tipo_pieza;
-use crate::pieza::Pieza;
-
-mod coordenada;
-
-mod formato;
-
 use std::env;
 use std::process::exit;
+
+use tp1::ajedrez;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -24,34 +14,13 @@ fn main() {
     }
 
     let txt_arg = &args[1];
-    match archivo::leer_archivo(txt_arg) {
-        Ok(contenido) => match ajedrez::obtener_piezas(contenido) {
-            Ok(piezas) => {
-                let piezas: Vec<Pieza> = piezas;
-                if piezas.len() != 2 {
-                    eprintln!(
-                        "Error: La cantidad de piezas dentro del tablero debe ser unicamente 2"
-                    );
-                    exit(0);
-                }
-                match Pieza::analizar_jugadas(piezas) {
-                    Ok(res) => {
-                        let resultado = ajedrez::definir_resultado(res);
-                        println!("{}", resultado);
-                    }
-                    Err(error) => {
-                        eprintln!("{}", error);
-                        exit(0);
-                    }
-                }
-            }
-            Err(error) => {
-                eprintln!("{}", error);
-                exit(0);
-            }
-        },
+    match ajedrez::iniciar(txt_arg) {
+        Ok(resultado) => {
+            println!("{}", resultado);
+            exit(0);
+        }
         Err(error) => {
-            eprintln!("Error: No se pudo leer el archivo: {}", error);
+            println!("{}", error);
             exit(0);
         }
     }

@@ -2,6 +2,7 @@ use crate::color::Color;
 use crate::coordenada::Coordenadas;
 use crate::tipo_pieza::TipoPieza;
 
+/// Representa la Pieza: color, tipo y posicion en el tablero
 #[derive(Debug, PartialEq)]
 pub struct Pieza {
     pub coordenadas: Coordenadas,
@@ -10,7 +11,7 @@ pub struct Pieza {
 }
 
 impl Pieza {
-    // Creo la pieza con sus caracteristicas: color, tipo y coordenadas
+    /// Creo la pieza con sus caracteristicas: color, tipo y coordenadas
     pub fn crear(letra: &char, x: usize, y: usize) -> Result<Self, String> {
         let coordenadas: Coordenadas = match Coordenadas::posicionar(x, y) {
             Ok(pos) => pos,
@@ -42,6 +43,7 @@ impl Pieza {
         })
     }
 
+    /// Analiza la juagada para la pieza de cada color. Retorna un vector con ambos resultados, en la posicion 0 irà el resultado para color blanco y en la pos 1 para el color negro
     pub fn analizar_jugadas(piezas: Vec<Pieza>) -> Result<Vec<bool>, String> {
         let pieza_blanca: &Pieza;
         let pieza_negra: &Pieza;
@@ -71,12 +73,8 @@ impl Pieza {
         Ok(resultados)
     }
 
-    /*
-        Pre: Cada una de las piezas tiene datos vàlidos.
-        Recibe pieza de ambos jugadores y analiza si el primero puede atacar al segundo.
-        Para esto, primero filtra por tipo para identificar movimiento y luego por color para identificar sentido en caso de ser necesario.
-    */
-    fn puede_atacar(pieza_actual: &Pieza, pieza_contrincante: &Pieza) -> Result<bool, String> {
+    ///Pre: Cada una de las piezas tiene datos vàlidos. Recibe pieza de ambos jugadores y analiza si el primero puede atacar al segundo. Para esto, primero filtra por tipo para identificar movimiento y luego por color para identificar sentido en caso de ser necesario.
+    pub fn puede_atacar(pieza_actual: &Pieza, pieza_contrincante: &Pieza) -> Result<bool, String> {
         if pieza_actual.color == pieza_contrincante.color {
             return Err(String::from(
                 "Error: No es vàlido capturar piezas del mismo color",
@@ -98,17 +96,13 @@ impl Pieza {
         Ok(puede_atacar)
     }
 
-    /*
-        Movimiento del rey: un casillero a la vez, en cualquier direccion y sentido
-    */
+    ///Movimiento del rey: un casillero a la vez, en cualquier direccion y sentido
     fn puede_atacar_rey(distancia_x: i8, distancia_y: i8) -> bool {
         ((distancia_x == 0 || distancia_x == 1) && distancia_y == 1)
             || (distancia_x == 1 && distancia_y == 0)
     }
 
-    /*
-        Movimiento de la dama: cuantos casilleros desee, en cualquier direcciòn y sentido
-    */
+    ///Movimiento de la dama: cuantos casilleros desee, en cualquier direcciòn y sentido
     fn puede_atacar_dama(distancia_x: i8, distancia_y: i8) -> bool {
         let ataque_diag_habilitado: bool = Self::puede_atacar_diagonal(distancia_x, distancia_y);
         let ataque_recto_habilitado: bool = Self::puede_atacar_vh(distancia_x, distancia_y);
@@ -116,32 +110,25 @@ impl Pieza {
         ataque_diag_habilitado || ataque_recto_habilitado
     }
 
-    /*
-        Movimiento del alfil: cuantos casilleros desee, de forma diagonal y en cualquier sentido
-    */
+    ///Movimiento del alfil: cuantos casilleros desee, de forma diagonal y en cualquier sentido
     fn puede_atacar_alfil(distancia_x: i8, distancia_y: i8) -> bool {
         Self::puede_atacar_diagonal(distancia_x, distancia_y)
     }
 
-    /*
-        Movimiento del caballo: avanza dos casilleros en vertical y uno horizontal, o viceversa en cualquier sentido
-    */
+    ///Movimiento del caballo: avanza dos casilleros en vertical y uno horizontal, o viceversa en cualquier sentido
     fn puede_atacar_caballo(distancia_x: i8, distancia_y: i8) -> bool {
         distancia_x == 1 && distancia_y == 2 || distancia_x == 2 && distancia_y == 1
     }
 
-    /*
-        Movimiento de la torre: Avanza cuantos casilleros desee en linea recta y cualquier sentido
-    */
+    ///Movimiento de la torre: Avanza cuantos casilleros desee en linea recta y cualquier sentido
     fn puede_atacar_torre(distancia_x: i8, distancia_y: i8) -> bool {
         Self::puede_atacar_vh(distancia_x, distancia_y)
     }
 
-    /*
-        Movimiento depende del color pues no puede retroceder. Avanzan en linea recta y 1 casillero a la vez
-        Caso color blanco: Se posicionan abajo por lo que avanzan hacia arriba (hacia los negativos de la matriz)
-        Caso color negro: Opuesto al blanco
-    */
+    ///Movimiento depende del color pues no puede retroceder.
+    ///Avanzan en linea recta y 1 casillero a la vez.
+    ///Caso color blanco: Se posicionan abajo por lo que avanzan hacia arriba (hacia los negativos de la matriz).
+    ///Caso color negro: Opuesto al blanco.
     fn puede_atacar_peon(pieza_actual: &Pieza, pieza_contrincante: &Pieza) -> bool {
         let sentido_movimiento = if pieza_actual.color == Color::Blanco {
             1
@@ -155,16 +142,12 @@ impl Pieza {
         distancia_y == sentido_movimiento && distancia_x == 1
     }
 
-    /*
-       Analiza movimiento en caso de que sea diagonal
-    */
+    ///Analiza movimiento en caso de que sea diagonal
     fn puede_atacar_diagonal(distancia_x: i8, distancia_y: i8) -> bool {
         distancia_x == distancia_y
     }
 
-    /*
-       Analiza movimiento en caso de que sea vertical u horizontal
-    */
+    ///Analiza movimiento en caso de que sea vertical u horizontal
     fn puede_atacar_vh(distancia_x: i8, distancia_y: i8) -> bool {
         distancia_x == 0 || distancia_y == 0
     }

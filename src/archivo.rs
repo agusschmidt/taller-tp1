@@ -1,9 +1,7 @@
 use std::fs::File;
 use std::io::{self, Read};
 
-/*
-Abre el archivo txt. Retorna contenido o error en caso de no poder abrirlo.
-*/
+///Abre el archivo txt. Retorna contenido o error en caso de no poder abrirlo.
 pub fn leer_archivo(nombre_txt: &str) -> Result<String, io::Error> {
     match File::open(nombre_txt) {
         Ok(mut archivo) => {
