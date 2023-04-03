@@ -1,7 +1,7 @@
 use crate::archivo;
 use crate::pieza::Pieza;
 
-/// Recibe el nombre del archivo quee contiene el tablero. 
+/// Recibe el nombre del archivo quee contiene el tablero.
 /// Busca las piezas, las crea y luego analiza las jugadas para devolver el resultado o error en caso de haber alguno.
 pub fn iniciar(txt_arg: &String) -> Result<String, String> {
     match archivo::leer_archivo(txt_arg) {
@@ -42,9 +42,7 @@ pub fn obtener_piezas(txt: String) -> Result<Vec<Pieza>, String> {
     let max_columnas: usize = 8;
 
     if filas.len() != max_filas {
-        return Err(String::from(
-            "Error: Tamaño del tablero excede el indicado",
-        ));
+        return Err(String::from("Error: Tamaño del tablero excede el indicado"));
     }
 
     for (i, fila) in filas.iter().enumerate() {
@@ -67,9 +65,7 @@ pub fn obtener_piezas(txt: String) -> Result<Vec<Pieza>, String> {
             }
 
             if j > max_columnas {
-                return Err(String::from(
-                    "Error: Tamaño del tablero excede el indicado",
-                ));
+                return Err(String::from("Error: Tamaño del tablero excede el indicado"));
             }
         }
     }

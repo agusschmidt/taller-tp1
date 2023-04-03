@@ -33,7 +33,10 @@ fn test_error_cantidad_piezas() {
     let archivo = "tablero_tres_piezas.txt".to_string();
     let resultado = ajedrez::iniciar(&archivo).unwrap_err();
     print!("{}", resultado);
-    assert_eq!(resultado, "Error: La cantidad de piezas dentro del tablero debe ser unicamente 2");
+    assert_eq!(
+        resultado,
+        "Error: La cantidad de piezas dentro del tablero debe ser unicamente 2"
+    );
 }
 
 #[test]
@@ -47,7 +50,10 @@ fn test_error_archivo_inexistente() {
 fn test_error_piezas_mismo_color() {
     let archivo = "tablero_piezas_mismo_color.txt".to_string();
     let resultado = ajedrez::iniciar(&archivo).unwrap_err();
-    assert_eq!(resultado, "Error: No es vàlido capturar piezas del mismo color");
+    assert_eq!(
+        resultado,
+        "Error: No es vàlido capturar piezas del mismo color"
+    );
 }
 
 #[test]
